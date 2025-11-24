@@ -65,7 +65,7 @@ const Dashboard = () => {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'confirmed': return 'var(--md-sys-color-primary)';
+            case 'accepted': return 'var(--md-sys-color-primary)';
             case 'completed': return 'green';
             case 'cancelled': return 'var(--md-sys-color-error)';
             default: return 'var(--md-sys-color-outline)';
@@ -74,7 +74,7 @@ const Dashboard = () => {
 
     const filteredBookings = bookings.filter(booking => {
         if (activeTab === 'upcoming') {
-            return booking.status === 'pending' || booking.status === 'confirmed';
+            return booking.status === 'pending' || booking.status === 'accepted';
         } else {
             return booking.status === 'completed' || booking.status === 'cancelled';
         }
@@ -137,9 +137,10 @@ const Dashboard = () => {
                             key={booking.id}
                             booking={booking}
                             userRole={user.user_metadata?.role}
-                            onAccept={(id) => updateStatus(id, 'confirmed')}
+                            onAccept={(id) => updateStatus(id, 'accepted')}
                             onDecline={(id) => updateStatus(id, 'cancelled')}
                             onCancel={(id) => updateStatus(id, 'cancelled')}
+                            onComplete={(id) => updateStatus(id, 'completed')}
                         />
                     ))}
                 </div>

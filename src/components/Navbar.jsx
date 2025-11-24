@@ -24,16 +24,14 @@ const Navbar = () => {
     ];
 
     return (
-        <nav style={{
-            backgroundColor: 'var(--md-sys-color-surface)',
-            color: 'var(--md-sys-color-on-surface)',
+        <nav className="glass-panel" style={{
             position: 'sticky',
             top: 0,
             zIndex: 50,
-            boxShadow: 'var(--md-sys-elevation-2)',
-            height: '64px', // Material 3 Top App Bar height
+            height: '72px',
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            borderBottom: '1px solid rgba(255,255,255,0.05)'
         }}>
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 {/* Leading: Logo/Menu */}
@@ -41,30 +39,39 @@ const Navbar = () => {
                     <button
                         className="desktop-only"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        style={{ 
-                            padding: '8px', 
-                            borderRadius: 'var(--md-sys-shape-corner-full)', 
-                            background: 'none',
+                        style={{
+                            padding: '8px',
+                            borderRadius: 'var(--radius-full)',
+                            background: 'rgba(255,255,255,0.1)',
                             border: 'none',
                             cursor: 'pointer',
                             display: 'none',
-                            color: 'var(--md-sys-color-on-surface)'
+                            color: 'var(--color-text-main)'
                         }}
                     >
                         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
 
-                    <Link to="/" style={{ 
-                        fontSize: '20px', 
-                        fontWeight: 600, 
-                        fontFamily: 'Roboto, sans-serif', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '8px',
+                    <Link to="/" style={{
+                        fontSize: '24px',
+                        fontWeight: 700,
+                        fontFamily: 'Outfit, sans-serif',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
                         textDecoration: 'none'
                     }}>
-                        <Sparkles size={24} color="var(--md-sys-color-primary)" fill="var(--md-sys-color-primary)" />
-                        <span className="gradient-text" style={{ fontWeight: 700 }}>LocalSkillHub</span>
+                        <div style={{
+                            background: 'var(--gradient-primary)',
+                            padding: '6px',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <Sparkles size={20} color="white" fill="white" />
+                        </div>
+                        <span className="text-gradient" style={{ letterSpacing: '-0.02em' }}>SkillSync</span>
                     </Link>
                 </div>
 
@@ -72,7 +79,7 @@ const Navbar = () => {
                 <div className="hidden md:flex" style={{ alignItems: 'center', gap: '8px' }}>
                     {navLinks.map(link => (
                         <Link key={link.path} to={link.path}>
-                            <Button variant="text" size="sm" style={{ fontWeight: 500 }}>
+                            <Button variant="ghost" size="sm" style={{ fontWeight: 500, color: 'var(--color-text-muted)' }}>
                                 {link.name}
                             </Button>
                         </Link>
@@ -80,36 +87,37 @@ const Navbar = () => {
                 </div>
 
                 {/* Trailing: Actions */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {user ? (
                         <>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                 <div style={{
-                                    width: '32px',
-                                    height: '32px',
+                                    width: '36px',
+                                    height: '36px',
                                     borderRadius: '50%',
-                                    backgroundColor: 'var(--md-sys-color-primary-container)',
-                                    color: 'var(--md-sys-color-on-primary-container)',
+                                    background: 'var(--gradient-secondary)',
+                                    color: 'white',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     fontSize: '14px',
-                                    fontWeight: 500
+                                    fontWeight: 600,
+                                    boxShadow: 'var(--shadow-glow)'
                                 }}>
                                     {user.email[0].toUpperCase()}
                                 </div>
-                                <Button variant="text" size="sm" onClick={handleSignOut} style={{ minWidth: 'auto', padding: '0 12px' }}>
+                                <Button variant="ghost" size="sm" onClick={handleSignOut} style={{ minWidth: 'auto', padding: '8px', color: 'var(--color-text-muted)' }}>
                                     <LogOut size={20} />
                                 </Button>
                             </div>
                         </>
                     ) : (
-                        <div style={{ display: 'flex', gap: '8px' }}>
+                        <div style={{ display: 'flex', gap: '12px' }}>
                             <Link to="/login">
-                                <Button variant="text">Login</Button>
+                                <Button variant="ghost" style={{ color: 'var(--color-text-main)' }}>Login</Button>
                             </Link>
                             <Link to="/signup">
-                                <Button variant="filled">Sign Up</Button>
+                                <Button variant="primary" style={{ boxShadow: 'var(--shadow-glow)' }}>Sign Up</Button>
                             </Link>
                         </div>
                     )}
@@ -118,33 +126,31 @@ const Navbar = () => {
 
             {/* Mobile Menu (Drawer-like) */}
             {isMenuOpen && (
-                <div style={{
+                <div className="glass-panel" style={{
                     position: 'absolute',
-                    top: '64px',
+                    top: '72px',
                     left: 0,
                     right: 0,
-                    backgroundColor: 'var(--md-sys-color-surface)',
-                    borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+                    borderBottom: '1px solid rgba(255,255,255,0.1)',
                     padding: '8px 16px 16px',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '4px',
-                    boxShadow: 'var(--md-sys-elevation-3)',
                     zIndex: 49
                 }}>
                     {navLinks.map(link => (
                         <Link key={link.path} to={link.path} onClick={() => setIsMenuOpen(false)}>
                             <div style={{
                                 padding: '12px 16px',
-                                borderRadius: 'var(--md-sys-shape-corner-full)',
+                                borderRadius: 'var(--radius-md)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '12px',
-                                color: 'var(--md-sys-color-on-surface-variant)',
-                                backgroundColor: window.location.pathname === link.path ? 'var(--md-sys-color-secondary-container)' : 'transparent',
+                                color: 'var(--color-text-main)',
+                                backgroundColor: window.location.pathname === link.path ? 'rgba(255,255,255,0.1)' : 'transparent',
                                 fontWeight: 500
                             }}>
-                                <link.icon size={20} />
+                                <link.icon size={20} color="var(--color-info)" />
                                 {link.name}
                             </div>
                         </Link>

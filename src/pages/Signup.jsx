@@ -62,7 +62,7 @@ const Signup = () => {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
                     {/* Role Selection */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
                         <button
@@ -121,7 +121,7 @@ const Signup = () => {
                         <Input
                             label="Email Address"
                             icon={Mail}
-                            type="email"
+                            type="text"
                             name="email"
                             required
                             placeholder="you@example.com"

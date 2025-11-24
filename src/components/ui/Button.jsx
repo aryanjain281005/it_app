@@ -1,93 +1,99 @@
 import React from 'react';
-import { Loader } from 'lucide-react';
 
-const Button = ({
-    children,
-    variant = 'filled', // filled, outlined, text, elevated, tonal
-    size = 'md',
-    isLoading = false,
-    className = '',
-    style = {},
-    ...props
-}) => {
+const Button = ({ children, variant = 'primary', size = 'md', isLoading, style = {}, ...props }) => {
     const baseStyles = {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'Roboto, sans-serif',
-        fontWeight: 500,
-        borderRadius: 'var(--md-sys-shape-corner-full)',
-        transition: 'all 0.2s ease',
+        fontFamily: 'Inter, sans-serif',
+        fontWeight: 600,
+        borderRadius: 'var(--radius-full)',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: isLoading ? 'not-allowed' : 'pointer',
         opacity: isLoading ? 0.7 : 1,
         border: 'none',
         outline: 'none',
         position: 'relative',
         overflow: 'hidden',
-        letterSpacing: '0.1px',
+        letterSpacing: '0.02em',
     };
 
     const variants = {
-        filled: {
-            backgroundColor: 'var(--md-sys-color-primary)',
-            color: 'var(--md-sys-color-on-primary)',
-            boxShadow: 'var(--md-sys-elevation-0)',
-        },
-        outlined: {
-            backgroundColor: 'transparent',
-            color: 'var(--md-sys-color-primary)',
-            border: '1px solid var(--md-sys-color-outline)',
-        },
-        text: {
-            backgroundColor: 'transparent',
-            color: 'var(--md-sys-color-primary)',
-            paddingLeft: '12px',
-            paddingRight: '12px',
-        },
-        elevated: {
-            backgroundColor: 'var(--md-sys-color-surface-variant)',
-            color: 'var(--md-sys-color-primary)',
-            boxShadow: 'var(--md-sys-elevation-1)',
-        },
-        tonal: {
-            backgroundColor: 'var(--md-sys-color-secondary-container)',
-            color: 'var(--md-sys-color-on-secondary-container)',
-        },
-        // Legacy mapping
         primary: {
-            backgroundColor: 'var(--md-sys-color-primary)',
-            color: 'var(--md-sys-color-on-primary)',
+            background: 'var(--gradient-primary)',
+            color: 'white',
+            boxShadow: 'var(--shadow-md)',
+            border: '1px solid rgba(255,255,255,0.1)',
         },
         secondary: {
-            backgroundColor: 'var(--md-sys-color-secondary-container)',
-            color: 'var(--md-sys-color-on-secondary-container)',
+            background: 'var(--gradient-secondary)',
+            color: 'white',
+            boxShadow: 'var(--shadow-md)',
+        },
+        outline: {
+            background: 'transparent',
+            color: 'var(--color-text-main)',
+            border: '1px solid var(--color-text-muted)',
         },
         ghost: {
-            backgroundColor: 'transparent',
-            color: 'var(--md-sys-color-primary)',
+            background: 'transparent',
+            color: 'var(--color-text-main)',
         },
-        danger: {
-            backgroundColor: 'var(--md-sys-color-error)',
-            color: 'var(--md-sys-color-on-error)',
+        filled: { // Keeping for compatibility
+            background: 'var(--gradient-primary)',
+            color: 'white',
+        },
+        outlined: { // Keeping for compatibility
+            background: 'transparent',
+            border: '1px solid var(--color-text-muted)',
+            color: 'var(--color-text-main)',
+        },
+        text: { // Keeping for compatibility
+            background: 'transparent',
+            color: 'var(--color-text-main)',
         }
     };
 
     const sizes = {
-        sm: { height: '32px', padding: '0 16px', fontSize: '0.875rem' },
-        md: { height: '40px', padding: '0 24px', fontSize: '0.875rem' },
-        lg: { height: '48px', padding: '0 32px', fontSize: '1rem' },
-    };
-
-    const combinedStyle = {
-        ...baseStyles,
-        ...variants[variant] || variants.filled,
-        ...sizes[size],
-        ...style,
+        sm: {
+            padding: '0.5rem 1rem',
+            fontSize: '0.875rem',
+            height: '36px',
+        },
+        md: {
+            padding: '0.75rem 1.5rem',
+            fontSize: '1rem',
+            height: '48px',
+        },
+        lg: {
+            padding: '1rem 2rem',
+            fontSize: '1.125rem',
+            height: '56px',
+        },
     };
 
     return (
-        <button style={combinedStyle} disabled={isLoading} {...props}>
-            {isLoading && <Loader className="animate-spin" size={18} style={{ marginRight: '0.5rem' }} />}
+        <button
+            style={{
+                ...baseStyles,
+                ...variants[variant],
+                ...sizes[size],
+                ...style,
+            }}
+            disabled={isLoading}
+            className="hover-scale"
+            {...props}
+        >
+            {isLoading ? (
+                <span className="animate-spin" style={{
+                    width: '20px',
+                    height: '20px',
+                    border: '2px solid currentColor',
+                    borderTopColor: 'transparent',
+                    borderRadius: '50%',
+                    marginRight: '8px'
+                }} />
+            ) : null}
             {children}
         </button>
     );

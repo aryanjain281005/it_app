@@ -4,10 +4,10 @@ import { Calendar, Clock, MapPin, User } from 'lucide-react';
 import Card from './ui/Card';
 import Button from './ui/Button';
 
-const BookingCard = ({ booking, onAccept, onDecline, onCancel, userRole }) => {
+const BookingCard = ({ booking, onAccept, onDecline, onCancel, onComplete, userRole }) => {
   const getStatusColor = (status) => {
     switch (status) {
-      case 'confirmed': return 'badge-success';
+      case 'accepted': return 'badge-success';
       case 'pending': return 'badge-warning';
       case 'cancelled': return 'badge-error';
       case 'completed': return 'badge-info';
@@ -94,10 +94,24 @@ const BookingCard = ({ booking, onAccept, onDecline, onCancel, userRole }) => {
           </>
         )}
 
+        {userRole === 'provider' && booking.status === 'accepted' && (
+          <Button variant="filled" size="sm" onClick={() => onComplete(booking.id)} style={{ flex: 1 }}>
+            Mark as Completed
+          </Button>
+        )}
+
         {userRole === 'user' && booking.status === 'pending' && (
           <Button variant="outlined" size="sm" onClick={() => onCancel(booking.id)} style={{ flex: 1 }}>
             Cancel Request
           </Button>
+        )}
+
+        {userRole === 'user' && booking.status === 'completed' && (
+          <Link to={`/review/${booking.id}`} style={{ flex: 1 }}>
+            <Button variant="filled" size="sm" style={{ width: '100%' }}>
+              Leave Review
+            </Button>
+          </Link>
         )}
 
         {booking.service && (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Search, Plus, User } from 'lucide-react';
+import { Home, Search, Plus, LayoutDashboard, User } from 'lucide-react';
 
 const BottomNav = ({ userRole }) => {
   const location = useLocation();
@@ -11,7 +11,8 @@ const BottomNav = ({ userRole }) => {
     { path: '/', icon: Home, label: 'Home' },
     { path: '/search', icon: Search, label: 'Search' },
     ...(userRole === 'provider' ? [{ path: '/create-service', icon: Plus, label: 'Create' }] : []),
-    { path: '/dashboard', icon: User, label: 'Profile' },
+    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/profile', icon: User, label: 'Profile' },
   ];
 
   return (

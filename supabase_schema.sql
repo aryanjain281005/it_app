@@ -1,6 +1,3 @@
--- Enable Row Level Security
-alter table auth.users enable row level security;
-
 -- PROFILES TABLE
 create table public.profiles (
   id uuid references auth.users not null primary key,

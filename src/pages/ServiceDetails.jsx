@@ -15,9 +15,12 @@ const ServiceDetails = () => {
     const [bookingDate, setBookingDate] = useState('');
     const [bookingTime, setBookingTime] = useState('');
     const [bookingLoading, setBookingLoading] = useState(false);
+    const [reviews, setReviews] = useState([]);
+    const [averageRating, setAverageRating] = useState(0);
 
     useEffect(() => {
         fetchServiceDetails();
+        fetchReviews();
     }, [id]);
 
     const fetchServiceDetails = async () => {
@@ -37,6 +40,30 @@ const ServiceDetails = () => {
             console.error('Error fetching service:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchReviews = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('reviews')
+                .select(`
+                    *,
+                    reviewer:profiles!reviewer_id (full_name, avatar_url)
+                `)
+                .eq('provider_id', service?.provider_id || id)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setReviews(data || []);
+            
+            // Calculate average rating
+            if (data && data.length > 0) {
+                const avg = data.reduce((sum, review) => sum + review.rating, 0) / data.length;
+                setAverageRating(avg);
+            }
+        } catch (error) {
+            console.error('Error fetching reviews:', error);
         }
     };
 
@@ -97,7 +124,9 @@ const ServiceDetails = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <Star fill="#fbbf24" color="#fbbf24" size={18} />
-                            <span style={{ fontWeight: 500, color: 'var(--md-sys-color-on-surface)' }}>4.8 (120 reviews)</span>
+                            <span style={{ fontWeight: 500, color: 'var(--md-sys-color-on-surface)' }}>
+                                {averageRating > 0 ? averageRating.toFixed(1) : 'No rating'} ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
+                            </span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <MapPin size={18} />
@@ -111,7 +140,7 @@ const ServiceDetails = () => {
                     </div>
 
                     {/* Provider Bio */}
-                    <Card variant="filled" style={{ display: 'flex', gap: '1rem', alignItems: 'start' }}>
+                    <Card variant="filled" style={{ display: 'flex', gap: '1rem', alignItems: 'start', marginBottom: '2rem' }}>
                         <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--md-sys-color-primary-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--md-sys-color-on-primary-container)', flexShrink: 0 }}>
                             <User size={24} />
                         </div>
@@ -121,6 +150,60 @@ const ServiceDetails = () => {
                             <p className="body-medium">{service.profiles?.bio || "I am a dedicated professional committed to delivering high-quality service."}</p>
                         </div>
                     </Card>
+
+                    {/* Reviews Section */}
+                    {reviews.length > 0 && (
+                        <div>
+                            <h3 className="title-large" style={{ fontWeight: 600, marginBottom: '1rem' }}>Customer Reviews</h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                {reviews.map((review) => (
+                                    <Card key={review.id} variant="outlined" style={{ padding: '1rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                <div style={{
+                                                    width: '40px',
+                                                    height: '40px',
+                                                    borderRadius: '50%',
+                                                    backgroundColor: 'var(--md-sys-color-primary-container)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: 'var(--md-sys-color-on-primary-container)'
+                                                }}>
+                                                    {review.reviewer?.avatar_url ? (
+                                                        <img src={review.reviewer.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                                    ) : (
+                                                        <User size={20} />
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="title-small" style={{ fontWeight: 600 }}>{review.reviewer?.full_name || 'Anonymous'}</p>
+                                                    <p className="body-small" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>
+                                                        {new Date(review.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '2px' }}>
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star
+                                                        key={i}
+                                                        size={16}
+                                                        fill={i < review.rating ? '#fbbf24' : 'none'}
+                                                        color={i < review.rating ? '#fbbf24' : 'var(--md-sys-color-outline)'}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        {review.comment && (
+                                            <p className="body-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>
+                                                {review.comment}
+                                            </p>
+                                        )}
+                                    </Card>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Column: Booking Card */}

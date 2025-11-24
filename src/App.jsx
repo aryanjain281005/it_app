@@ -13,6 +13,8 @@ import CreateService from './pages/CreateService';
 import AdminView from './pages/AdminView';
 
 import ServiceDetails from './pages/ServiceDetails';
+import ReviewBooking from './pages/ReviewBooking';
+import Profile from './pages/Profile';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -49,6 +51,22 @@ const AppContent = () => {
           element={
             <ProtectedRoute>
               <CreateService />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/review/:bookingId"
+          element={
+            <ProtectedRoute>
+              <ReviewBooking />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

@@ -1,60 +1,68 @@
 import React from 'react';
 
-const Card = ({
-    children,
-    variant = 'elevated', // elevated, filled, outlined
-    className = '',
-    hover = false,
-    style = {},
-    ...props
-}) => {
+const Card = ({ children, variant = 'elevated', hover = false, className = '', style = {}, ...props }) => {
     const baseStyles = {
-        borderRadius: 'var(--md-sys-shape-corner-medium)',
-        padding: '16px',
-        transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+        borderRadius: 'var(--radius-lg)',
+        padding: '1.5rem',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        position: 'relative',
         overflow: 'hidden',
         ...(hover && { cursor: 'pointer' }),
     };
 
     const variants = {
         elevated: {
-            backgroundColor: 'var(--md-sys-color-surface)',
-            boxShadow: 'var(--md-sys-elevation-1)',
+            background: 'rgba(30, 41, 59, 0.7)', // Slate 800 with opacity
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: 'var(--shadow-md)',
         },
         filled: {
-            backgroundColor: 'var(--md-sys-color-surface-variant)',
-            boxShadow: 'none',
+            background: 'var(--color-bg-secondary)',
+            border: '1px solid transparent',
         },
         outlined: {
-            backgroundColor: 'var(--md-sys-color-surface)',
-            border: '1px solid var(--md-sys-color-outline-variant)',
-            boxShadow: 'none',
+            background: 'transparent',
+            border: '1px solid var(--md-sys-color-outline)',
+        },
+        glass: {
+            background: 'var(--gradient-glass)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: 'var(--shadow-lg)',
         }
     };
 
-    const combinedStyle = {
-        ...baseStyles,
-        ...variants[variant],
-        ...style,
-    };
+    // Hover effects
+    const hoverStyles = hover ? {
+        transform: 'translateY(-4px)',
+        boxShadow: 'var(--shadow-glow)',
+        borderColor: 'rgba(99, 102, 241, 0.5)', // Indigo glow
+    } : {};
 
     return (
         <div
-            className={className}
-            style={combinedStyle}
-            onMouseEnter={(e) => {
-                if (hover) {
-                    e.currentTarget.style.boxShadow = 'var(--md-sys-elevation-2)';
-                }
-            }}
-            onMouseLeave={(e) => {
-                if (hover) {
-                    e.currentTarget.style.boxShadow = variant === 'elevated' ? 'var(--md-sys-elevation-1)' : 'none';
-                }
+            className={`card ${hover ? 'hover-scale' : ''} ${className}`}
+            style={{
+                ...baseStyles,
+                ...variants[variant],
+                ...style,
             }}
             {...props}
         >
-            {children}
+            {/* Optional: Add a subtle gradient overlay on hover */}
+            {hover && (
+                <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 70%)',
+                    pointerEvents: 'none',
+                    zIndex: 0
+                }} />
+            )}
+            <div style={{ position: 'relative', zIndex: 1 }}>
+                {children}
+            </div>
         </div>
     );
 };
