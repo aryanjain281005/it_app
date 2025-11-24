@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Menu, X, User, LogOut, Search, Home, PlusSquare, LayoutDashboard } from 'lucide-react';
+import { Menu, X, User, LogOut, Search, Home, PlusSquare, LayoutDashboard, Sparkles } from 'lucide-react';
 import Button from './ui/Button';
 
 const Navbar = () => {
@@ -39,15 +39,32 @@ const Navbar = () => {
                 {/* Leading: Logo/Menu */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <button
-                        className="md:hidden"
+                        className="desktop-only"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        style={{ padding: '8px', borderRadius: '50%', color: 'inherit' }}
+                        style={{ 
+                            padding: '8px', 
+                            borderRadius: 'var(--md-sys-shape-corner-full)', 
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'none',
+                            color: 'var(--md-sys-color-on-surface)'
+                        }}
                     >
                         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
 
-                    <Link to="/" style={{ fontSize: '22px', fontWeight: 400, fontFamily: 'Roboto, sans-serif', letterSpacing: '0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontWeight: 500, color: 'var(--md-sys-color-primary)' }}>LocalSkillHub</span>
+                    <Link to="/" style={{ 
+                        fontSize: '20px', 
+                        fontWeight: 600, 
+                        fontFamily: 'Roboto, sans-serif', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px',
+                        textDecoration: 'none'
+                    }}>
+                        <Sparkles size={24} color="var(--md-sys-color-primary)" fill="var(--md-sys-color-primary)" />
+                        <span className="gradient-text" style={{ fontWeight: 700 }}>LocalSkillHub</span>
                     </Link>
                 </div>
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import BottomNav from './components/BottomNav';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -15,41 +16,51 @@ import ServiceDetails from './pages/ServiceDetails';
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="flex-center" style={{ minHeight: '100vh' }}><div className="animate-spin" style={{ width: '40px', height: '40px', border: '4px solid var(--md-sys-color-primary)', borderTopColor: 'transparent', borderRadius: '50%' }}></div></div>;
   if (!user) return <Navigate to="/login" />;
   return children;
+};
+
+// App Content with Bottom Nav
+const AppContent = () => {
+  const { user } = useAuth();
+  
+  return (
+    <div className="app">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/service/:id" element={<ServiceDetails />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-service"
+          element={
+            <ProtectedRoute>
+              <CreateService />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      {user && <BottomNav userRole={user.user_metadata?.role} />}
+    </div>
+  );
 };
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="app">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/service/:id" element={<ServiceDetails />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/create-service"
-              element={
-                <ProtectedRoute>
-                  <CreateService />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
+        <AppContent />
       </Router>
     </AuthProvider>
   );
