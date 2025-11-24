@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Calendar, Clock, MapPin, DollarSign, CheckCircle, XCircle, AlertCircle, Plus } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
+import BookingCard from '../components/BookingCard';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -27,8 +28,14 @@ const Dashboard = () => {
                 .from('bookings')
                 .select(`
           *,
-          services (title, image_url),
-          profiles:user_id (full_name, location)
+          service:services!service_id (
+            id,
+            title,
+            price,
+            image_url,
+            provider:profiles!provider_id (full_name, avatar_url)
+          ),
+          user:profiles!user_id (full_name, avatar_url)
         `)
                 .eq(column, user.id)
                 .order('booking_date', { ascending: false });
@@ -126,68 +133,14 @@ const Dashboard = () => {
             {filteredBookings.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {filteredBookings.map(booking => (
-                        <Card key={booking.id} variant="outlined" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '1rem' }}>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    <div style={{ width: '64px', height: '64px', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'var(--md-sys-color-surface-variant)' }}>
-                                        {booking.services?.image_url ? (
-                                            <img src={booking.services.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        ) : (
-                                            <div className="flex-center" style={{ width: '100%', height: '100%' }}>🛠️</div>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <h3 className="title-medium" style={{ fontWeight: 600 }}>{booking.services?.title}</h3>
-                                        <p className="body-small" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>
-                                            Booking ID: #{booking.id.slice(0, 8)}
-                                        </p>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
-                                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: getStatusColor(booking.status) }}></div>
-                                            <span style={{ fontSize: '0.875rem', textTransform: 'capitalize', color: 'var(--md-sys-color-on-surface)' }}>{booking.status}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style={{ textAlign: 'right' }}>
-                                    <p className="title-large" style={{ fontWeight: 700, color: 'var(--md-sys-color-primary)' }}>₹{booking.total_price}</p>
-                                </div>
-                            </div>
-
-                            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', borderTop: '1px solid var(--md-sys-color-outline-variant)', paddingTop: '1rem', marginTop: '0.5rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--md-sys-color-on-surface-variant)' }}>
-                                    <Calendar size={18} />
-                                    <span className="body-medium">{new Date(booking.booking_date).toLocaleDateString()}</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--md-sys-color-on-surface-variant)' }}>
-                                    <Clock size={18} />
-                                    <span className="body-medium">{booking.booking_time}</span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--md-sys-color-on-surface-variant)' }}>
-                                    <MapPin size={18} />
-                                    <span className="body-medium">{booking.profiles?.location || 'Location not set'}</span>
-                                </div>
-                            </div>
-
-                            {/* Actions for Provider */}
-                            {user.user_metadata?.role === 'provider' && booking.status === 'pending' && (
-                                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-                                    <Button size="sm" variant="filled" onClick={() => updateStatus(booking.id, 'confirmed')}>
-                                        <CheckCircle size={16} style={{ marginRight: '4px' }} /> Accept
-                                    </Button>
-                                    <Button size="sm" variant="outlined" onClick={() => updateStatus(booking.id, 'cancelled')} style={{ color: 'var(--md-sys-color-error)', borderColor: 'var(--md-sys-color-error)' }}>
-                                        <XCircle size={16} style={{ marginRight: '4px' }} /> Decline
-                                    </Button>
-                                </div>
-                            )}
-
-                            {/* Actions for User */}
-                            {user.user_metadata?.role === 'user' && booking.status === 'pending' && (
-                                <div style={{ marginTop: '0.5rem' }}>
-                                    <Button size="sm" variant="text" onClick={() => updateStatus(booking.id, 'cancelled')} style={{ color: 'var(--md-sys-color-error)' }}>
-                                        Cancel Booking
-                                    </Button>
-                                </div>
-                            )}
-                        </Card>
+                        <BookingCard
+                            key={booking.id}
+                            booking={booking}
+                            userRole={user.user_metadata?.role}
+                            onAccept={(id) => updateStatus(id, 'confirmed')}
+                            onDecline={(id) => updateStatus(id, 'cancelled')}
+                            onCancel={(id) => updateStatus(id, 'cancelled')}
+                        />
                     ))}
                 </div>
             ) : (

@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Search from './pages/Search';
 import Dashboard from './pages/Dashboard';
 import CreateService from './pages/CreateService';
+import AdminView from './pages/AdminView';
 
 import ServiceDetails from './pages/ServiceDetails';
 
@@ -34,6 +35,7 @@ const AppContent = () => {
         <Route path="/service/:id" element={<ServiceDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/admin" element={<AdminView />} />
         <Route
           path="/dashboard"
           element={
