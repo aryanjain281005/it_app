@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import BottomNav from './components/BottomNav';
+import FloatingParticles from './components/FloatingParticles';
+import GlowCursor from './components/GlowCursor';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -24,12 +26,14 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// App Content with Bottom Nav
+// App Content with Premium Effects
 const AppContent = () => {
   const { user } = useAuth();
   
   return (
     <div className="app">
+      <FloatingParticles count={25} />
+      <GlowCursor />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

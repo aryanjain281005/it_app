@@ -90,7 +90,7 @@ const Dashboard = () => {
                     width: '48px', 
                     height: '48px', 
                     border: '4px solid rgba(232, 69, 69, 0.2)', 
-                    borderTopColor: '#E84545', 
+                    borderTopColor: '#D63864', 
                     borderRadius: '50%' 
                 }}
             />
@@ -104,7 +104,7 @@ const Dashboard = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{ 
-                    background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                    background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                     borderRadius: 'var(--radius-xl)',
                     padding: '2rem 1.5rem',
                     marginBottom: '2rem',
@@ -131,7 +131,7 @@ const Dashboard = () => {
                     {user.user_metadata?.role === 'provider' && (
                         <Link to="/create-service">
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Button variant="filled" style={{ background: 'white', color: '#E84545' }}>
+                                <Button variant="filled" style={{ background: 'white', color: '#D63864' }}>
                                     <Plus size={20} style={{ marginRight: '8px' }} />
                                     New Service
                                 </Button>
@@ -152,7 +152,7 @@ const Dashboard = () => {
                         padding: '12px 24px',
                         borderRadius: 'var(--radius-md)',
                         border: 'none',
-                        background: activeTab === 'upcoming' ? 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)' : 'transparent',
+                        background: activeTab === 'upcoming' ? 'linear-gradient(135deg, #D63864 0%, #F97316 100%)' : 'transparent',
                         color: activeTab === 'upcoming' ? 'white' : '#666',
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -171,7 +171,7 @@ const Dashboard = () => {
                         padding: '12px 24px',
                         borderRadius: 'var(--radius-md)',
                         border: 'none',
-                        background: activeTab === 'history' ? 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)' : 'transparent',
+                        background: activeTab === 'history' ? 'linear-gradient(135deg, #D63864 0%, #F97316 100%)' : 'transparent',
                         color: activeTab === 'history' ? 'white' : '#666',
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -220,7 +220,7 @@ const Dashboard = () => {
                         width: '80px', 
                         height: '80px', 
                         borderRadius: '50%', 
-                        background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                        background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

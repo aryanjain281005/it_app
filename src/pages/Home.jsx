@@ -131,7 +131,7 @@ const Home = () => {
                                     cursor: 'pointer'
                                 }}
                             >
-                                <Search size={24} color="#E84545" />
+                                <Search size={24} color="#D63864" />
                                 <span style={{ 
                                     flex: 1, 
                                     textAlign: 'left', 
@@ -305,12 +305,12 @@ const Home = () => {
                         textAlign: 'center'
                     }}>
                         <motion.div whileHover={{ scale: 1.05 }}>
-                            <Shield size={48} color="#E84545" style={{ marginBottom: '1rem' }} />
+                            <Shield size={48} color="#D63864" style={{ marginBottom: '1rem' }} />
                             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>Verified Professionals</h3>
                             <p style={{ color: 'var(--color-text-muted)' }}>All providers are background-checked</p>
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.05 }}>
-                            <Clock size={48} color="#FF6B35" style={{ marginBottom: '1rem' }} />
+                            <Clock size={48} color="#F97316" style={{ marginBottom: '1rem' }} />
                             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>Same-Day Service</h3>
                             <p style={{ color: 'var(--color-text-muted)' }}>Book now, get service today</p>
                         </motion.div>

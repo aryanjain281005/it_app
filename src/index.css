@@ -1,24 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Warm Coral-Red Theme (Blinkit Inspired) */
+  /* Pink/Red Theme (Figma Design System) */
 
   /* Core Colors - Light Mode Base */
-  --color-bg-main: #FFF8F5;
-  /* Warm off-white */
-  --color-bg-secondary: #FFF0E8;
-  /* Light peach */
-  --color-text-main: #2D1B12;
-  /* Dark brown */
-  --color-text-muted: #8B6B5C;
-  /* Muted brown */
+  --color-bg-main: #FFF5E6;
+  /* Cream background */
+  --color-bg-secondary: #FFEBD6;
+  /* Light cream */
+  --color-text-main: #1A1A1A;
+  /* Almost black */
+  --color-text-muted: #666666;
+  /* Medium gray */
 
-  /* Brand Gradients - Warm Coral & Red */
-  --gradient-primary: linear-gradient(135deg, #E84545 0%, #D94141 50%, #C83737 100%);
-  /* Deep coral-red gradient */
-  --gradient-hero: linear-gradient(180deg, #E84545 0%, #B83333 100%);
-  /* Vertical hero gradient */
-  --gradient-secondary: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+  /* Brand Gradients - Pink & Red */
+  --color-primary: #D63864;
+  /* Primary pink/red */
+  --color-accent: #F97316;
+  /* Orange accent */
+  --color-cream: #FFF5E6;
+  /* Cream accent */
+  --gradient-primary: linear-gradient(135deg, #D63864 0%, #C1395B 100%);
+  /* Pink-red gradient */
+  --gradient-hero: linear-gradient(180deg, #D63864 0%, #E85C7C 50%, #F97316 100%);
+  /* Hero gradient with orange */
+  --gradient-secondary: linear-gradient(135deg, #F97316 0%, #FF8A3D 100%);
   /* Orange gradient */
   --gradient-accent: linear-gradient(135deg, #FFD93D 0%, #FFA500 100%);
   /* Yellow-orange */
@@ -27,23 +33,23 @@
 
   /* Functional Colors */
   --color-success: #27AE60;
-  --color-warning: #FF9F1C;
-  --color-error: #E84545;
+  --color-warning: #F97316;
+  --color-error: #D63864;
   --color-info: #3498DB;
 
   /* Material 3 Mappings (For compatibility) */
-  --md-sys-color-primary: #E84545;
+  --md-sys-color-primary: #D63864;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-surface: #FFFFFF;
-  --md-sys-color-on-surface: #2D1B12;
-  --md-sys-color-on-surface-variant: #8B6B5C;
+  --md-sys-color-on-surface: #1A1A1A;
+  --md-sys-color-on-surface-variant: #666666;
   --md-sys-color-outline: #E0D4CC;
   --md-sys-color-outline-variant: #F5EDE7;
-  --md-sys-color-background: #FFF8F5;
-  --md-sys-color-on-background: #2D1B12;
-  --md-sys-color-secondary-container: rgba(232, 69, 69, 0.10);
-  --md-sys-color-on-secondary-container: #C83737;
-  --md-sys-color-error: #E84545;
+  --md-sys-color-background: #FFF5E6;
+  --md-sys-color-on-background: #1A1A1A;
+  --md-sys-color-secondary-container: rgba(214, 56, 100, 0.10);
+  --md-sys-color-on-secondary-container: #C1395B;
+  --md-sys-color-error: #D63864;
 
   /* Shapes */
   --radius-sm: 8px;
@@ -56,11 +62,12 @@
   --md-sys-shape-corner-large: var(--radius-lg);
   --md-sys-shape-corner-full: var(--radius-full);
 
-  /* Shadows (Glows) */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+  /* Shadows (Soft, Elevated) */
+  --shadow-sm: 0 2px 8px rgba(214, 56, 100, 0.08);
+  --shadow-md: 0 4px 16px rgba(214, 56, 100, 0.12);
+  --shadow-lg: 0 8px 32px rgba(214, 56, 100, 0.16);
+  --shadow-xl: 0 20px 60px rgba(214, 56, 100, 0.20);
+  --shadow-glow: 0 0 20px rgba(214, 56, 100, 0.3);
 
   --md-sys-elevation-1: var(--shadow-sm);
   --md-sys-elevation-2: var(--shadow-md);
@@ -81,8 +88,8 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 20% 50%, rgba(232, 69, 69, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 107, 53, 0.03) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgba(214, 56, 100, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.04) 0%, transparent 50%);
   min-height: 100vh;
   background-attachment: fixed;
 }
@@ -93,9 +100,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   color: var(--color-text-main);
 }
 

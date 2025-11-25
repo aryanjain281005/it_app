@@ -63,7 +63,7 @@ const Search = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{ 
-                    background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                    background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                     borderRadius: 'var(--radius-xl)',
                     padding: '2rem 1.5rem',
                     marginBottom: '2rem',
@@ -126,7 +126,7 @@ const Search = () => {
                                 borderRadius: 'var(--radius-lg)',
                                 border: 'none',
                                 background: selectedCategory === category 
-                                    ? 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)' 
+                                    ? 'linear-gradient(135deg, #D63864 0%, #F97316 100%)' 
                                     : 'white',
                                 color: selectedCategory === category ? 'white' : '#666',
                                 fontSize: '0.875rem',
@@ -159,7 +159,7 @@ const Search = () => {
                             width: '48px', 
                             height: '48px', 
                             border: '4px solid rgba(232, 69, 69, 0.2)', 
-                            borderTopColor: '#E84545', 
+                            borderTopColor: '#D63864', 
                             borderRadius: '50%' 
                         }}
                     />
@@ -194,7 +194,7 @@ const Search = () => {
                         width: '80px', 
                         height: '80px', 
                         borderRadius: '50%', 
-                        background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                        background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

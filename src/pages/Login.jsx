@@ -48,7 +48,7 @@ const Login = () => {
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.05 }}>
                 <svg width="100%" height="100%">
                     <pattern id="login-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <circle cx="20" cy="20" r="2" fill="#E84545" />
+                        <circle cx="20" cy="20" r="2" fill="#D63864" />
                     </pattern>
                     <rect width="100%" height="100%" fill="url(#login-pattern)" />
                 </svg>
@@ -71,7 +71,7 @@ const Login = () => {
                                 height: '60px', 
                                 margin: '0 auto 1rem',
                                 borderRadius: '50%',
-                                background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                                background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
@@ -83,7 +83,7 @@ const Login = () => {
                             fontSize: '2rem', 
                             marginBottom: '0.5rem', 
                             fontWeight: 700,
-                            background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                            background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
@@ -140,7 +140,7 @@ const Login = () => {
 
                 <p style={{ textAlign: 'center', marginTop: '1.5rem', color: '#666', fontSize: '0.875rem' }}>
                     Don't have an account? <Link to="/signup" style={{ 
-                        background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                        background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',

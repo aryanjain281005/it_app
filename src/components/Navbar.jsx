@@ -60,7 +60,7 @@ const Navbar = () => {
                             <Sparkles size={22} color="white" fill="white" />
                         </div>
                         <span style={{ 
-                            background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                            background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'

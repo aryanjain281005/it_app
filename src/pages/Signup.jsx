@@ -52,7 +52,7 @@ const Signup = () => {
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.05 }}>
                 <svg width="100%" height="100%">
                     <pattern id="signup-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <circle cx="20" cy="20" r="2" fill="#E84545" />
+                        <circle cx="20" cy="20" r="2" fill="#D63864" />
                     </pattern>
                     <rect width="100%" height="100%" fill="url(#signup-pattern)" />
                 </svg>
@@ -75,7 +75,7 @@ const Signup = () => {
                                 height: '60px', 
                                 margin: '0 auto 1rem',
                                 borderRadius: '50%',
-                                background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                                background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
@@ -87,7 +87,7 @@ const Signup = () => {
                             fontSize: '2rem', 
                             marginBottom: '0.5rem', 
                             fontWeight: 700,
-                            background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                            background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
@@ -118,12 +118,12 @@ const Signup = () => {
                             onClick={() => setFormData({ ...formData, role: 'user' })}
                             style={{
                                 padding: '1rem',
-                                border: `2px solid ${formData.role === 'user' ? '#E84545' : 'transparent'}`,
+                                border: `2px solid ${formData.role === 'user' ? '#D63864' : 'transparent'}`,
                                 borderRadius: 'var(--radius-lg)',
                                 background: formData.role === 'user' 
                                     ? 'linear-gradient(135deg, rgba(232, 69, 69, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%)'
                                     : 'rgba(255,255,255,0.5)',
-                                color: formData.role === 'user' ? '#E84545' : '#999',
+                                color: formData.role === 'user' ? '#D63864' : '#999',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
@@ -143,12 +143,12 @@ const Signup = () => {
                             onClick={() => setFormData({ ...formData, role: 'provider' })}
                             style={{
                                 padding: '1rem',
-                                border: `2px solid ${formData.role === 'provider' ? '#E84545' : 'transparent'}`,
+                                border: `2px solid ${formData.role === 'provider' ? '#D63864' : 'transparent'}`,
                                 borderRadius: 'var(--radius-lg)',
                                 background: formData.role === 'provider' 
                                     ? 'linear-gradient(135deg, rgba(232, 69, 69, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%)'
                                     : 'rgba(255,255,255,0.5)',
-                                color: formData.role === 'provider' ? '#E84545' : '#999',
+                                color: formData.role === 'provider' ? '#D63864' : '#999',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
@@ -208,7 +208,7 @@ const Signup = () => {
 
                 <p style={{ textAlign: 'center', marginTop: '1.5rem', color: '#666', fontSize: '0.875rem' }}>
                     Already have an account? <Link to="/login" style={{ 
-                        background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                        background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
