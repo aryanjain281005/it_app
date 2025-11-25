@@ -8,7 +8,7 @@ import Card from '../components/ui/Card';
 import BookingCard from '../components/BookingCard';
 import ProviderAnalytics from '../components/ProviderAnalytics';
 import { Link } from 'react-router-dom';
-import { announceToScreenReader } from '../lib/accessibility';
+import { announceToScreenReader } from '../lib/accessibility.jsx';
 import toast from 'react-hot-toast';
 
 const Dashboard = () => {

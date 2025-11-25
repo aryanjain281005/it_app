@@ -6,7 +6,7 @@ import Navbar from './components/Navbar';
 import BottomNav from './components/BottomNav';
 import FloatingParticles from './components/FloatingParticles';
 import GlowCursor from './components/GlowCursor';
-import { SkipToContent, createScreenReaderAnnouncer, usePrefersReducedMotion } from './lib/accessibility';
+import { SkipToContent, createScreenReaderAnnouncer, usePrefersReducedMotion } from './lib/accessibility.jsx';
 import { initPushNotifications, isNative } from './lib/capacitorUtils';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
