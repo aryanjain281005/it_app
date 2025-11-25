@@ -11,8 +11,8 @@ import {
     BarChart as BarChartIcon,
 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import Card from '../ui/Card';
-import Button from '../ui/Button';
+import Card from './ui/Card';
+import Button from './ui/Button';
 import toast from 'react-hot-toast';
 
 const ProviderAnalytics = () => {
