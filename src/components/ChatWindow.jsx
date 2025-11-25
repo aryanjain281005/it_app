@@ -16,9 +16,12 @@ const ChatWindow = ({ booking, onClose }) => {
     const messagesEndRef = useRef(null);
     const chatChannel = useRef(null);
 
+    // Determine the other user in the conversation
     const otherUser = user.id === booking.user_id 
-        ? booking.service?.provider 
+        ? (booking.service?.provider || booking.provider)
         : booking.user;
+
+    console.log('Chat Debug:', { booking, otherUser, currentUserId: user.id });
 
     useEffect(() => {
         fetchMessages();
@@ -96,21 +99,30 @@ const ChatWindow = ({ booking, onClose }) => {
 
         setLoading(true);
         try {
+            // Determine receiver_id based on current user role
+            const receiverId = user.id === booking.user_id 
+                ? booking.provider_id 
+                : booking.user_id;
+
             const { error } = await supabase.from('messages').insert([
                 {
                     booking_id: booking.id,
                     sender_id: user.id,
-                    receiver_id: user.id === booking.user_id ? booking.provider_id : booking.user_id,
+                    receiver_id: receiverId,
                     message: newMessage.trim(),
                     message_type: 'text',
                 },
             ]);
 
-            if (error) throw error;
+            if (error) {
+                console.error('Insert error:', error);
+                throw error;
+            }
             setNewMessage('');
+            scrollToBottom();
         } catch (error) {
             console.error('Error sending message:', error);
-            toast.error('Failed to send message');
+            toast.error('Failed to send message: ' + error.message);
         } finally {
             setLoading(false);
         }

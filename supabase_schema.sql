@@ -164,3 +164,29 @@ create policy "Users can view their own notifications."
 create policy "Users can update their own notifications."
   on notifications for update
   using ( auth.uid() = user_id );
+
+-- OTP TABLE (Service Completion Verification)
+create table public.otp_verifications (
+  id uuid default uuid_generate_v4() primary key,
+  booking_id uuid references public.bookings(id) not null unique,
+  otp_code text not null,
+  user_id uuid references public.profiles(id) not null,
+  provider_id uuid references public.profiles(id) not null,
+  verified boolean default false,
+  expires_at timestamp with time zone not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.otp_verifications enable row level security;
+
+create policy "Users can view OTPs for their bookings."
+  on otp_verifications for select
+  using ( auth.uid() = user_id OR auth.uid() = provider_id );
+
+create policy "Providers can create OTPs."
+  on otp_verifications for insert
+  with check ( auth.uid() = provider_id );
+
+create policy "Users can update OTPs (verify)."
+  on otp_verifications for update
+  using ( auth.uid() = user_id OR auth.uid() = provider_id );

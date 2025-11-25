@@ -37,9 +37,10 @@ const Dashboard = () => {
             title,
             price,
             image_url,
-            provider:profiles!provider_id (full_name, avatar_url)
+            provider:profiles!provider_id (full_name, avatar_url, id)
           ),
-          user:profiles!user_id (full_name, avatar_url)
+          user:profiles!user_id (full_name, avatar_url, id),
+          provider:profiles!provider_id (full_name, avatar_url, id)
         `)
                 .eq(column, user.id)
                 .order('booking_date', { ascending: false });

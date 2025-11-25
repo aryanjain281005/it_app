@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, MapPin, User, MessageCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, MessageCircle, Shield, Map } from 'lucide-react';
 import Card from './ui/Card';
 import Button from './ui/Button';
 import ChatWindow from './ChatWindow';
+import OTPVerification from './OTPVerification';
+import LocationMap from './LocationMap';
 
 const BookingCard = ({ booking, onAccept, onDecline, onCancel, onComplete, userRole }) => {
   const [showChat, setShowChat] = useState(false);
+  const [showOTP, setShowOTP] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -98,8 +102,9 @@ const BookingCard = ({ booking, onAccept, onDecline, onCancel, onComplete, userR
         )}
 
         {userRole === 'provider' && booking.status === 'accepted' && (
-          <Button variant="filled" size="sm" onClick={() => onComplete(booking.id)} style={{ flex: 1 }}>
-            Mark as Completed
+          <Button variant="filled" size="sm" onClick={() => setShowOTP(true)} style={{ flex: 1 }}>
+            <Shield size={16} style={{ marginRight: '0.5rem' }} />
+            Complete with OTP
           </Button>
         )}
 
@@ -126,21 +131,48 @@ const BookingCard = ({ booking, onAccept, onDecline, onCancel, onComplete, userR
         )}
 
         {(booking.status === 'accepted' || booking.status === 'completed') && (
-          <Button
-            variant="outlined"
-            size="sm"
-            onClick={() => setShowChat(true)}
-            style={{ flex: 1 }}
-            aria-label="Open chat"
-          >
-            <MessageCircle size={16} style={{ marginRight: '0.5rem' }} />
-            Chat
-          </Button>
+          <>
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={() => setShowChat(true)}
+              style={{ flex: 1 }}
+              aria-label="Open chat"
+            >
+              <MessageCircle size={16} style={{ marginRight: '0.5rem' }} />
+              Chat
+            </Button>
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={() => setShowMap(true)}
+              style={{ flex: 1 }}
+              aria-label="View location"
+            >
+              <Map size={16} style={{ marginRight: '0.5rem' }} />
+              Location
+            </Button>
+          </>
         )}
       </div>
 
       {/* Chat Window */}
       {showChat && <ChatWindow booking={booking} onClose={() => setShowChat(false)} />}
+      
+      {/* OTP Verification */}
+      {showOTP && (
+        <OTPVerification
+          booking={booking}
+          onClose={() => setShowOTP(false)}
+          onVerified={() => {
+            onComplete(booking.id);
+            setShowOTP(false);
+          }}
+        />
+      )}
+
+      {/* Location Map */}
+      {showMap && <LocationMap booking={booking} onClose={() => setShowMap(false)} />}
     </Card>
   );
 };
