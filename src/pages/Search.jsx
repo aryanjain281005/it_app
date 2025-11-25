@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabaseClient';
 import ServiceCard from '../components/ServiceCard';
-import { Search as SearchIcon, Filter } from 'lucide-react';
+import { Search as SearchIcon, Filter, Sparkles } from 'lucide-react';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -56,69 +57,165 @@ const Search = () => {
     );
 
     return (
-        <div className="container animate-fade-in" style={{ padding: '2rem 1rem' }}>
-            <div style={{ marginBottom: '2rem' }}>
-                <h1 className="headline-medium" style={{ fontWeight: 700, marginBottom: '1rem', color: 'var(--md-sys-color-on-surface)' }}>Find Professionals</h1>
+        <div className="container" style={{ padding: '1rem', paddingBottom: '5rem' }}>
+            {/* Warm Gradient Header */}
+            <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ 
+                    background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                    borderRadius: 'var(--radius-xl)',
+                    padding: '2rem 1.5rem',
+                    marginBottom: '2rem',
+                    position: 'relative',
+                    overflow: 'hidden'
+                }}
+            >
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.1 }}>
+                    <svg width="100%" height="100%">
+                        <pattern id="search-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                            <circle cx="20" cy="20" r="2" fill="white" />
+                        </pattern>
+                        <rect width="100%" height="100%" fill="url(#search-pattern)" />
+                    </svg>
+                </div>
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                        <Sparkles size={20} color="white" />
+                        <h1 className="headline-medium" style={{ fontWeight: 700, color: 'white', margin: 0 }}>Find Professionals</h1>
+                    </div>
+                    <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.875rem', margin: 0 }}>
+                        {filteredServices.length} service{filteredServices.length !== 1 ? 's' : ''} available
+                    </p>
+                </div>
+            </motion.div>
 
-                {/* Search Bar */}
-                <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ marginBottom: '2rem' }}>
+                {/* Glassmorphism Search Bar */}
+                <motion.div 
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="glass"
+                    style={{ marginBottom: '1.5rem', padding: '0.5rem', borderRadius: 'var(--radius-lg)' }}
+                >
                     <Input
                         icon={SearchIcon}
                         label="Search services"
-                        placeholder="e.g. Home Cleaning"
+                        placeholder="e.g. Home Cleaning, Plumber, Electrician"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{ marginBottom: 0 }}
                     />
-                </div>
+                </motion.div>
 
-                {/* Filter Chips */}
+                {/* Animated Filter Chips */}
                 <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none' }}>
-                    {categories.map(category => (
-                        <button
+                    {categories.map((category, index) => (
+                        <motion.button
                             key={category}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => setSelectedCategory(category)}
+                            className={selectedCategory === category ? 'ripple' : ''}
                             style={{
                                 padding: '0 16px',
-                                height: '32px',
-                                borderRadius: '8px',
-                                border: selectedCategory === category ? 'none' : '1px solid var(--md-sys-color-outline)',
-                                backgroundColor: selectedCategory === category ? 'var(--md-sys-color-secondary-container)' : 'transparent',
-                                color: selectedCategory === category ? 'var(--md-sys-color-on-secondary-container)' : 'var(--md-sys-color-on-surface-variant)',
+                                height: '36px',
+                                borderRadius: 'var(--radius-lg)',
+                                border: 'none',
+                                background: selectedCategory === category 
+                                    ? 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)' 
+                                    : 'white',
+                                color: selectedCategory === category ? 'white' : '#666',
                                 fontSize: '0.875rem',
-                                fontWeight: 500,
+                                fontWeight: 600,
                                 whiteSpace: 'nowrap',
-                                transition: 'all 0.2s',
                                 cursor: 'pointer',
                                 display: 'flex',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                gap: '6px',
+                                boxShadow: selectedCategory === category 
+                                    ? '0 4px 12px rgba(232, 69, 69, 0.3)'
+                                    : '0 2px 8px rgba(0,0,0,0.06)',
+                                transition: 'all 0.3s ease'
                             }}
                         >
-                            {selectedCategory === category && <Filter size={14} style={{ marginRight: '6px' }} />}
+                            {selectedCategory === category && <Filter size={14} />}
                             {category}
-                        </button>
+                        </motion.button>
                     ))}
                 </div>
             </div>
 
-            {/* Results Grid */}
+            {/* Animated Results Grid */}
             {loading ? (
                 <div className="flex-center" style={{ padding: '4rem' }}>
-                    <div className="animate-spin" style={{ width: '48px', height: '48px', border: '4px solid var(--md-sys-color-surface-variant)', borderTopColor: 'var(--md-sys-color-primary)', borderRadius: '50%' }}></div>
+                    <motion.div 
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                        style={{ 
+                            width: '48px', 
+                            height: '48px', 
+                            border: '4px solid rgba(232, 69, 69, 0.2)', 
+                            borderTopColor: '#E84545', 
+                            borderRadius: '50%' 
+                        }}
+                    />
                 </div>
             ) : filteredServices.length > 0 ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                    {filteredServices.map(service => (
-                        <ServiceCard key={service.id} service={service} />
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}
+                >
+                    {filteredServices.map((service, index) => (
+                        <motion.div
+                            key={service.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="hover-lift"
+                        >
+                            <ServiceCard service={service} />
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             ) : (
-                <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
-                    <p className="body-large">No services found matching your criteria.</p>
-                    <Button variant="text" onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }} style={{ marginTop: '1rem' }}>
-                        Clear Filters
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="glass"
+                    style={{ textAlign: 'center', padding: '3rem 2rem', borderRadius: 'var(--radius-xl)' }}
+                >
+                    <div style={{ 
+                        width: '80px', 
+                        height: '80px', 
+                        borderRadius: '50%', 
+                        background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto 1.5rem',
+                        opacity: 0.2
+                    }}>
+                        <SearchIcon size={40} color="white" />
+                    </div>
+                    <p className="body-large" style={{ fontWeight: 600, marginBottom: '0.5rem', color: '#333' }}>
+                        No services found
+                    </p>
+                    <p style={{ color: '#666', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+                        Try adjusting your filters or search term
+                    </p>
+                    <Button 
+                        variant="primary" 
+                        onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }}
+                    >
+                        Clear All Filters
                     </Button>
-                </div>
+                </motion.div>
             )}
         </div>
     );

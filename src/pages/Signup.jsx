@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { User, Briefcase, Mail, Lock } from 'lucide-react';
+import { User, Briefcase, Mail, Lock, Sparkles } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
@@ -42,12 +43,57 @@ const Signup = () => {
     };
 
     return (
-        <div className="flex-center animate-fade-in" style={{ minHeight: 'calc(100vh - 5rem)', padding: '2rem' }}>
-            <Card style={{ width: '100%', maxWidth: '450px' }}>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h2 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 700 }}>Create Account</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>Join LocalSkillHub today</p>
-                </div>
+        <div className="flex-center" style={{ 
+            minHeight: 'calc(100vh - 5rem)', 
+            padding: '2rem',
+            background: 'linear-gradient(135deg, #FFF8F5 0%, #FFEEE6 100%)',
+            position: 'relative'
+        }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.05 }}>
+                <svg width="100%" height="100%">
+                    <pattern id="signup-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <circle cx="20" cy="20" r="2" fill="#E84545" />
+                    </pattern>
+                    <rect width="100%" height="100%" fill="url(#signup-pattern)" />
+                </svg>
+            </div>
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                style={{ width: '100%', maxWidth: '450px', position: 'relative', zIndex: 1 }}
+            >
+                <Card className="glass" style={{ padding: '2.5rem', boxShadow: '0 20px 60px rgba(232, 69, 69, 0.15)' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <motion.div 
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            style={{ 
+                                width: '60px', 
+                                height: '60px', 
+                                margin: '0 auto 1rem',
+                                borderRadius: '50%',
+                                background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Sparkles size={28} color="white" />
+                        </motion.div>
+                        <h2 style={{ 
+                            fontSize: '2rem', 
+                            marginBottom: '0.5rem', 
+                            fontWeight: 700,
+                            background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}>Create Account</h2>
+                        <p style={{ color: '#666', fontSize: '0.95rem' }}>Join LocalSkillHub today</p>
+                    </div>
 
                 {error && (
                     <div style={{
@@ -63,48 +109,58 @@ const Signup = () => {
                 )}
 
                 <form onSubmit={handleSubmit} noValidate>
-                    {/* Role Selection */}
+                    {/* Animated Role Selection */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-                        <button
+                        <motion.button
                             type="button"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                             onClick={() => setFormData({ ...formData, role: 'user' })}
                             style={{
                                 padding: '1rem',
-                                border: `2px solid ${formData.role === 'user' ? 'var(--primary)' : 'transparent'}`,
-                                borderRadius: 'var(--radius-md)',
-                                backgroundColor: formData.role === 'user' ? 'rgba(99, 102, 241, 0.1)' : 'rgba(255,255,255,0.5)',
-                                color: formData.role === 'user' ? 'var(--primary)' : 'var(--text-muted)',
+                                border: `2px solid ${formData.role === 'user' ? '#E84545' : 'transparent'}`,
+                                borderRadius: 'var(--radius-lg)',
+                                background: formData.role === 'user' 
+                                    ? 'linear-gradient(135deg, rgba(232, 69, 69, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%)'
+                                    : 'rgba(255,255,255,0.5)',
+                                color: formData.role === 'user' ? '#E84545' : '#999',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 gap: '0.5rem',
-                                transition: 'all 0.2s',
-                                cursor: 'pointer'
+                                transition: 'all 0.3s',
+                                cursor: 'pointer',
+                                boxShadow: formData.role === 'user' ? '0 4px 12px rgba(232, 69, 69, 0.2)' : 'none'
                             }}
                         >
                             <User size={24} />
-                            <span style={{ fontWeight: 600 }}>I need a Service</span>
-                        </button>
-                        <button
+                            <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>I need a Service</span>
+                        </motion.button>
+                        <motion.button
                             type="button"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                             onClick={() => setFormData({ ...formData, role: 'provider' })}
                             style={{
                                 padding: '1rem',
-                                border: `2px solid ${formData.role === 'provider' ? 'var(--primary)' : 'transparent'}`,
-                                borderRadius: 'var(--radius-md)',
-                                backgroundColor: formData.role === 'provider' ? 'rgba(99, 102, 241, 0.1)' : 'rgba(255,255,255,0.5)',
-                                color: formData.role === 'provider' ? 'var(--primary)' : 'var(--text-muted)',
+                                border: `2px solid ${formData.role === 'provider' ? '#E84545' : 'transparent'}`,
+                                borderRadius: 'var(--radius-lg)',
+                                background: formData.role === 'provider' 
+                                    ? 'linear-gradient(135deg, rgba(232, 69, 69, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%)'
+                                    : 'rgba(255,255,255,0.5)',
+                                color: formData.role === 'provider' ? '#E84545' : '#999',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 gap: '0.5rem',
-                                transition: 'all 0.2s',
-                                cursor: 'pointer'
+                                transition: 'all 0.3s',
+                                cursor: 'pointer',
+                                boxShadow: formData.role === 'provider' ? '0 4px 12px rgba(232, 69, 69, 0.2)' : 'none'
                             }}
                         >
                             <Briefcase size={24} />
-                            <span style={{ fontWeight: 600 }}>I am a Provider</span>
-                        </button>
+                            <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>I am a Provider</span>
+                        </motion.button>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -150,10 +206,18 @@ const Signup = () => {
                     </div>
                 </form>
 
-                <p style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                    Already have an account? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>Log in</Link>
+                <p style={{ textAlign: 'center', marginTop: '1.5rem', color: '#666', fontSize: '0.875rem' }}>
+                    Already have an account? <Link to="/login" style={{ 
+                        background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        fontWeight: 600,
+                        textDecoration: 'none'
+                    }}>Log in</Link>
                 </p>
-            </Card>
+                </Card>
+            </motion.div>
         </div>
     );
 };

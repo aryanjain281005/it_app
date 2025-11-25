@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, Sparkles } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Card from '../components/ui/Card';
@@ -37,12 +38,58 @@ const Login = () => {
     };
 
     return (
-        <div className="flex-center animate-fade-in" style={{ minHeight: 'calc(100vh - 5rem)', padding: '2rem' }}>
-            <Card style={{ width: '100%', maxWidth: '400px' }}>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h2 className="text-gradient" style={{ fontSize: '2rem', marginBottom: '0.5rem', fontWeight: 700 }}>Welcome Back</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>Log in to continue</p>
-                </div>
+        <div className="flex-center" style={{ 
+            minHeight: 'calc(100vh - 5rem)', 
+            padding: '2rem',
+            background: 'linear-gradient(135deg, #FFF8F5 0%, #FFEEE6 100%)',
+            position: 'relative'
+        }}>
+            {/* Decorative Pattern */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.05 }}>
+                <svg width="100%" height="100%">
+                    <pattern id="login-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <circle cx="20" cy="20" r="2" fill="#E84545" />
+                    </pattern>
+                    <rect width="100%" height="100%" fill="url(#login-pattern)" />
+                </svg>
+            </div>
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                style={{ width: '100%', maxWidth: '400px', position: 'relative', zIndex: 1 }}
+            >
+                <Card className="glass" style={{ padding: '2.5rem', boxShadow: '0 20px 60px rgba(232, 69, 69, 0.15)' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <motion.div 
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            style={{ 
+                                width: '60px', 
+                                height: '60px', 
+                                margin: '0 auto 1rem',
+                                borderRadius: '50%',
+                                background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Sparkles size={28} color="white" />
+                        </motion.div>
+                        <h2 style={{ 
+                            fontSize: '2rem', 
+                            marginBottom: '0.5rem', 
+                            fontWeight: 700,
+                            background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}>Welcome Back</h2>
+                        <p style={{ color: '#666', fontSize: '0.95rem' }}>Log in to continue your journey</p>
+                    </div>
 
                 {error && (
                     <div style={{
@@ -91,10 +138,18 @@ const Login = () => {
                     </div>
                 </form>
 
-                <p style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-                    Don't have an account? <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 600 }}>Sign up</Link>
+                <p style={{ textAlign: 'center', marginTop: '1.5rem', color: '#666', fontSize: '0.875rem' }}>
+                    Don't have an account? <Link to="/signup" style={{ 
+                        background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        fontWeight: 600,
+                        textDecoration: 'none'
+                    }}>Sign up</Link>
                 </p>
-            </Card>
+                </Card>
+            </motion.div>
         </div>
     );
 };
