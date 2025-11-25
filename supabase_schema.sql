@@ -115,3 +115,52 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- MESSAGES TABLE (Chat System)
+create table public.messages (
+  id uuid default uuid_generate_v4() primary key,
+  booking_id uuid references public.bookings(id) not null,
+  sender_id uuid references public.profiles(id) not null,
+  receiver_id uuid references public.profiles(id) not null,
+  message text not null,
+  message_type text check (message_type in ('text', 'image', 'file')) default 'text',
+  attachment_url text,
+  is_read boolean default false,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.messages enable row level security;
+
+create policy "Users can view messages they are part of."
+  on messages for select
+  using ( auth.uid() = sender_id OR auth.uid() = receiver_id );
+
+create policy "Users can send messages."
+  on messages for insert
+  with check ( auth.uid() = sender_id );
+
+create policy "Users can mark messages as read."
+  on messages for update
+  using ( auth.uid() = receiver_id );
+
+-- NOTIFICATIONS TABLE (Push Notifications)
+create table public.notifications (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) not null,
+  title text not null,
+  body text not null,
+  type text not null,
+  data jsonb,
+  is_read boolean default false,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.notifications enable row level security;
+
+create policy "Users can view their own notifications."
+  on notifications for select
+  using ( auth.uid() = user_id );
+
+create policy "Users can update their own notifications."
+  on notifications for update
+  using ( auth.uid() = user_id );

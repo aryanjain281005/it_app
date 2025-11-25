@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import BottomNav from './components/BottomNav';
 import FloatingParticles from './components/FloatingParticles';
 import GlowCursor from './components/GlowCursor';
+import { SkipToContent, createScreenReaderAnnouncer, usePrefersReducedMotion } from './lib/accessibility';
+import { initPushNotifications, isNative } from './lib/capacitorUtils';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -29,12 +32,25 @@ const ProtectedRoute = ({ children }) => {
 // App Content with Premium Effects
 const AppContent = () => {
   const { user } = useAuth();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  
+  useEffect(() => {
+    // Initialize accessibility announcer
+    createScreenReaderAnnouncer();
+    
+    // Initialize push notifications on native platforms
+    if (isNative()) {
+      initPushNotifications();
+    }
+  }, []);
   
   return (
     <div className="app">
-      <FloatingParticles count={25} />
-      <GlowCursor />
+      <SkipToContent />
+      {!prefersReducedMotion && <FloatingParticles count={25} />}
+      {!prefersReducedMotion && <GlowCursor />}
       <Navbar />
+      <main id="main-content" role="main">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
@@ -75,7 +91,34 @@ const AppContent = () => {
           }
         />
       </Routes>
+      </main>
       {user && <BottomNav userRole={user.user_metadata?.role} />}
+      
+      {/* Toast Notifications */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#fff',
+            color: '#333',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow-lg)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#27AE60',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#D63864',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
     </div>
   );
 };

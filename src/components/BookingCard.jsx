@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, MapPin, User } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, MessageCircle } from 'lucide-react';
 import Card from './ui/Card';
 import Button from './ui/Button';
+import ChatWindow from './ChatWindow';
 
 const BookingCard = ({ booking, onAccept, onDecline, onCancel, onComplete, userRole }) => {
+  const [showChat, setShowChat] = useState(false);
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'accepted': return 'badge-success';
@@ -121,7 +124,23 @@ const BookingCard = ({ booking, onAccept, onDecline, onCancel, onComplete, userR
             </Button>
           </Link>
         )}
+
+        {(booking.status === 'accepted' || booking.status === 'completed') && (
+          <Button
+            variant="outlined"
+            size="sm"
+            onClick={() => setShowChat(true)}
+            style={{ flex: 1 }}
+            aria-label="Open chat"
+          >
+            <MessageCircle size={16} style={{ marginRight: '0.5rem' }} />
+            Chat
+          </Button>
+        )}
       </div>
+
+      {/* Chat Window */}
+      {showChat && <ChatWindow booking={booking} onClose={() => setShowChat(false)} />}
     </Card>
   );
 };

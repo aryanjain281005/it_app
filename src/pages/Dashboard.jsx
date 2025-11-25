@@ -2,17 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
-import { Calendar, Clock, MapPin, DollarSign, CheckCircle, XCircle, AlertCircle, Plus, TrendingUp } from 'lucide-react';
+import { Calendar, Clock, MapPin, DollarSign, CheckCircle, XCircle, AlertCircle, Plus, TrendingUp, BarChart } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import BookingCard from '../components/BookingCard';
+import ProviderAnalytics from '../components/ProviderAnalytics';
 import { Link } from 'react-router-dom';
+import { announceToScreenReader } from '../lib/accessibility';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
     const { user } = useAuth();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('upcoming'); // upcoming, history
+    const [activeTab, setActiveTab] = useState('upcoming'); // upcoming, history, analytics
 
     useEffect(() => {
         if (user) {
@@ -58,9 +61,19 @@ const Dashboard = () => {
                 .eq('id', bookingId);
 
             if (error) throw error;
+            
+            const statusMessages = {
+                accepted: 'Booking accepted successfully!',
+                completed: 'Booking marked as completed!',
+                cancelled: 'Booking cancelled'
+            };
+            
+            toast.success(statusMessages[newStatus] || 'Booking updated');
+            announceToScreenReader(statusMessages[newStatus] || 'Booking updated');
             fetchBookings(); // Refresh list
         } catch (error) {
             console.error('Error updating status:', error);
+            toast.error('Failed to update booking status');
         }
     };
 
@@ -147,6 +160,8 @@ const Dashboard = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setActiveTab('upcoming')}
+                    aria-pressed={activeTab === 'upcoming'}
+                    aria-label="Show upcoming bookings"
                     style={{
                         flex: 1,
                         padding: '12px 24px',
@@ -157,15 +172,17 @@ const Dashboard = () => {
                         fontWeight: 600,
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        boxShadow: activeTab === 'upcoming' ? '0 4px 12px rgba(232, 69, 69, 0.3)' : 'none'
+                        boxShadow: activeTab === 'upcoming' ? '0 4px 12px rgba(214, 56, 100, 0.3)' : 'none'
                     }}
                 >
-                    Upcoming Bookings
+                    Upcoming
                 </motion.button>
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setActiveTab('history')}
+                    aria-pressed={activeTab === 'history'}
+                    aria-label="Show booking history"
                     style={{
                         flex: 1,
                         padding: '12px 24px',
@@ -176,13 +193,42 @@ const Dashboard = () => {
                         fontWeight: 600,
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        boxShadow: activeTab === 'history' ? '0 4px 12px rgba(232, 69, 69, 0.3)' : 'none'
+                        boxShadow: activeTab === 'history' ? '0 4px 12px rgba(214, 56, 100, 0.3)' : 'none'
                     }}
                 >
                     History
                 </motion.button>
+                {user.user_metadata?.role === 'provider' && (
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setActiveTab('analytics')}
+                        aria-pressed={activeTab === 'analytics'}
+                        aria-label="Show analytics"
+                        style={{
+                            flex: 1,
+                            padding: '12px 24px',
+                            borderRadius: 'var(--radius-md)',
+                            border: 'none',
+                            background: activeTab === 'analytics' ? 'linear-gradient(135deg, #D63864 0%, #F97316 100%)' : 'transparent',
+                            color: activeTab === 'analytics' ? 'white' : '#666',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: activeTab === 'analytics' ? '0 4px 12px rgba(214, 56, 100, 0.3)' : 'none'
+                        }}
+                    >
+                        <BarChart size={16} style={{ marginRight: '0.5rem', display: 'inline' }} />
+                        Analytics
+                    </motion.button>
+                )}
             </div>
 
+            {/* Content based on active tab */}
+            {activeTab === 'analytics' && user.user_metadata?.role === 'provider' ? (
+                <ProviderAnalytics />
+            ) : (
+                <>
             {/* Animated Bookings List */}
             {filteredBookings.length > 0 ? (
                 <motion.div 
@@ -241,6 +287,8 @@ const Dashboard = () => {
                         </Link>
                     )}
                 </motion.div>
+            )}
+            </>
             )}
         </div>
     );

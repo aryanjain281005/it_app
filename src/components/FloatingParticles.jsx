@@ -3,9 +3,19 @@ import { useEffect, useState } from 'react';
 
 const FloatingParticles = ({ count = 20 }) => {
     const [particles, setParticles] = useState([]);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        const newParticles = Array.from({ length: count }, (_, i) => ({
+        // Reduce particle count on mobile for better performance
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    useEffect(() => {
+        const particleCount = isMobile ? Math.floor(count / 2) : count;
+        const newParticles = Array.from({ length: particleCount }, (_, i) => ({
             id: i,
             x: Math.random() * 100,
             y: Math.random() * 100,
@@ -15,7 +25,7 @@ const FloatingParticles = ({ count = 20 }) => {
             opacity: Math.random() * 0.3 + 0.1,
         }));
         setParticles(newParticles);
-    }, [count]);
+    }, [count, isMobile]);
 
     return (
         <div style={{
