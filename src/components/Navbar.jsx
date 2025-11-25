@@ -24,54 +24,47 @@ const Navbar = () => {
     ];
 
     return (
-        <nav className="glass-panel" style={{
+        <nav style={{
             position: 'sticky',
             top: 0,
             zIndex: 50,
             height: '72px',
             display: 'flex',
             alignItems: 'center',
-            borderBottom: '1px solid rgba(255,255,255,0.05)'
+            background: '#FFFFFF',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
+            borderBottom: '1px solid var(--md-sys-color-outline-variant)'
         }}>
             <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                {/* Leading: Logo/Menu */}
+                {/* Leading: Logo */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <button
-                        className="desktop-only"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        style={{
-                            padding: '8px',
-                            borderRadius: 'var(--radius-full)',
-                            background: 'rgba(255,255,255,0.1)',
-                            border: 'none',
-                            cursor: 'pointer',
-                            display: 'none',
-                            color: 'var(--color-text-main)'
-                        }}
-                    >
-                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
-
                     <Link to="/" style={{
-                        fontSize: '24px',
-                        fontWeight: 700,
-                        fontFamily: 'Outfit, sans-serif',
+                        fontSize: '1.5rem',
+                        fontWeight: 800,
+                        fontFamily: 'Plus Jakarta Sans, sans-serif',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px',
-                        textDecoration: 'none'
+                        textDecoration: 'none',
+                        color: 'var(--color-text-main)'
                     }}>
                         <div style={{
-                            background: 'var(--gradient-primary)',
-                            padding: '6px',
-                            borderRadius: '8px',
+                            background: 'var(--md-sys-color-primary)',
+                            padding: '8px',
+                            borderRadius: '12px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(232, 69, 69, 0.25)'
                         }}>
-                            <Sparkles size={20} color="white" fill="white" />
+                            <Sparkles size={22} color="white" fill="white" />
                         </div>
-                        <span className="text-gradient" style={{ letterSpacing: '-0.02em' }}>SkillSync</span>
+                        <span style={{ 
+                            background: 'linear-gradient(135deg, #E84545 0%, #FF6B35 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}>LocalSkillHub</span>
                     </Link>
                 </div>
 

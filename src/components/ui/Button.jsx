@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const Button = ({ children, variant = 'primary', size = 'md', isLoading, style = {}, ...props }) => {
     const baseStyles = {
@@ -7,50 +8,50 @@ const Button = ({ children, variant = 'primary', size = 'md', isLoading, style =
         justifyContent: 'center',
         fontFamily: 'Inter, sans-serif',
         fontWeight: 600,
-        borderRadius: 'var(--radius-full)',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        borderRadius: 'var(--radius-lg)',
+        transition: 'all 0.2s ease',
         cursor: isLoading ? 'not-allowed' : 'pointer',
         opacity: isLoading ? 0.7 : 1,
         border: 'none',
         outline: 'none',
         position: 'relative',
         overflow: 'hidden',
-        letterSpacing: '0.02em',
+        letterSpacing: '0.01em',
     };
 
     const variants = {
         primary: {
-            background: 'var(--gradient-primary)',
+            background: 'var(--md-sys-color-primary)',
             color: 'white',
-            boxShadow: 'var(--shadow-md)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 2px 8px rgba(232, 69, 69, 0.25)',
         },
         secondary: {
             background: 'var(--gradient-secondary)',
             color: 'white',
-            boxShadow: 'var(--shadow-md)',
+            boxShadow: '0 2px 8px rgba(255, 107, 53, 0.25)',
         },
         outline: {
             background: 'transparent',
-            color: 'var(--color-text-main)',
-            border: '1px solid var(--color-text-muted)',
+            color: 'var(--md-sys-color-primary)',
+            border: '2px solid var(--md-sys-color-primary)',
         },
         ghost: {
             background: 'transparent',
             color: 'var(--color-text-main)',
         },
-        filled: { // Keeping for compatibility
-            background: 'var(--gradient-primary)',
+        filled: {
+            background: 'var(--md-sys-color-primary)',
             color: 'white',
+            boxShadow: '0 2px 8px rgba(232, 69, 69, 0.25)',
         },
-        outlined: { // Keeping for compatibility
+        outlined: {
             background: 'transparent',
-            border: '1px solid var(--color-text-muted)',
+            border: '2px solid var(--md-sys-color-outline)',
             color: 'var(--color-text-main)',
         },
-        text: { // Keeping for compatibility
+        text: {
             background: 'transparent',
-            color: 'var(--color-text-main)',
+            color: 'var(--md-sys-color-primary)',
         }
     };
 
@@ -73,7 +74,10 @@ const Button = ({ children, variant = 'primary', size = 'md', isLoading, style =
     };
 
     return (
-        <button
+        <motion.button
+            whileHover={{ scale: 1.02, boxShadow: '0 4px 16px rgba(232, 69, 69, 0.3)' }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
             style={{
                 ...baseStyles,
                 ...variants[variant],
@@ -81,7 +85,7 @@ const Button = ({ children, variant = 'primary', size = 'md', isLoading, style =
                 ...style,
             }}
             disabled={isLoading}
-            className="hover-scale"
+            className="ripple"
             {...props}
         >
             {isLoading ? (
@@ -95,7 +99,7 @@ const Button = ({ children, variant = 'primary', size = 'md', isLoading, style =
                 }} />
             ) : null}
             {children}
-        </button>
+        </motion.button>
     );
 };
 
