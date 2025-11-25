@@ -29,7 +29,7 @@ const ServiceDetails = () => {
                 .from('services')
                 .select(`
           *,
-          profiles (full_name, avatar_url, location, bio)
+          profiles (full_name, avatar_url, location, bio, phone)
         `)
                 .eq('id', id)
                 .single();
@@ -144,9 +144,41 @@ const ServiceDetails = () => {
                         <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--md-sys-color-primary-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--md-sys-color-on-primary-container)', flexShrink: 0 }}>
                             <User size={24} />
                         </div>
-                        <div>
+                        <div style={{ flex: 1 }}>
                             <h3 className="title-medium" style={{ fontWeight: 600 }}>Provided by {service.profiles?.full_name}</h3>
                             <p className="body-small" style={{ color: 'var(--md-sys-color-on-surface-variant)', marginBottom: '4px' }}>Verified Professional • Member since 2023</p>
+                            {service.profiles?.phone && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                                    <div style={{ 
+                                        background: 'linear-gradient(135deg, #D63864 0%, #F97316 100%)',
+                                        padding: '0.5rem 1rem',
+                                        borderRadius: 'var(--radius-md)',
+                                        color: 'white',
+                                        fontWeight: 600,
+                                        fontSize: '0.9rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem'
+                                    }}>
+                                        📱 {service.profiles.phone}
+                                    </div>
+                                    <a 
+                                        href={`tel:${service.profiles.phone}`}
+                                        style={{
+                                            padding: '0.5rem 1rem',
+                                            background: 'rgba(214, 56, 100, 0.1)',
+                                            border: '1px solid rgba(214, 56, 100, 0.3)',
+                                            borderRadius: 'var(--radius-md)',
+                                            color: '#D63864',
+                                            textDecoration: 'none',
+                                            fontWeight: 600,
+                                            fontSize: '0.875rem'
+                                        }}
+                                    >
+                                        📞 Call Now
+                                    </a>
+                                </div>
+                            )}
                             <p className="body-medium">{service.profiles?.bio || "I am a dedicated professional committed to delivering high-quality service."}</p>
                         </div>
                     </Card>

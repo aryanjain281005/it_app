@@ -18,6 +18,21 @@ const Login = () => {
         password: ''
     });
 
+    // Test account autofill
+    const fillTestUser = () => {
+        setFormData({
+            email: 'test@user.com',
+            password: 'testuser123'
+        });
+    };
+
+    const fillTestProvider = () => {
+        setFormData({
+            email: 'test@provider.com',
+            password: 'testprovider123'
+        });
+    };
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -127,6 +142,50 @@ const Login = () => {
                             value={formData.password}
                             onChange={handleChange}
                         />
+
+                        {/* Test Account Buttons */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                            <button
+                                type="button"
+                                onClick={fillTestUser}
+                                style={{
+                                    flex: 1,
+                                    padding: '0.5rem',
+                                    background: 'rgba(59, 130, 246, 0.1)',
+                                    border: '1px solid rgba(59, 130, 246, 0.3)',
+                                    borderRadius: 'var(--radius-sm)',
+                                    color: '#3B82F6',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.target.style.background = 'rgba(59, 130, 246, 0.2)'}
+                                onMouseLeave={(e) => e.target.style.background = 'rgba(59, 130, 246, 0.1)'}
+                            >
+                                🧪 Test User
+                            </button>
+                            <button
+                                type="button"
+                                onClick={fillTestProvider}
+                                style={{
+                                    flex: 1,
+                                    padding: '0.5rem',
+                                    background: 'rgba(16, 185, 129, 0.1)',
+                                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                                    borderRadius: 'var(--radius-sm)',
+                                    color: '#10B981',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.target.style.background = 'rgba(16, 185, 129, 0.2)'}
+                                onMouseLeave={(e) => e.target.style.background = 'rgba(16, 185, 129, 0.1)'}
+                            >
+                                🧪 Test Provider
+                            </button>
+                        </div>
 
                         <Button
                             type="submit"
