@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../context/AuthContext';
-import { Calendar, Clock, MapPin, Star, ShieldCheck, User, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, MapPin, Star, ShieldCheck, User, ArrowLeft, Package } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
+import BookingCalendar from '../components/BookingCalendar';
+import TimeSlotPicker from '../components/TimeSlotPicker';
+import ReviewCard from '../components/ReviewCard';
+import ReviewForm from '../components/ReviewForm';
+import PackageCard from '../components/PackageCard';
 
 const ServiceDetails = () => {
     const { id } = useParams();
@@ -17,11 +22,33 @@ const ServiceDetails = () => {
     const [bookingLoading, setBookingLoading] = useState(false);
     const [reviews, setReviews] = useState([]);
     const [averageRating, setAverageRating] = useState(0);
+    const [packages, setPackages] = useState([]);
+    const [selectedPackage, setSelectedPackage] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+    const [showBookingForm, setShowBookingForm] = useState(false);
+    const [showReviewForm, setShowReviewForm] = useState(false);
 
     useEffect(() => {
         fetchServiceDetails();
         fetchReviews();
+        fetchPackages();
     }, [id]);
+
+    const fetchPackages = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('service_packages')
+                .select('*')
+                .eq('service_id', id)
+                .eq('is_active', true);
+
+            if (error) throw error;
+            setPackages(data || []);
+        } catch (error) {
+            console.error('Error fetching packages:', error);
+        }
+    };
 
     const fetchServiceDetails = async () => {
         try {

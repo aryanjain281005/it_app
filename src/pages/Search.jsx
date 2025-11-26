@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabaseClient';
 import ServiceCard from '../components/ServiceCard';
-import { Search as SearchIcon, Filter, Sparkles } from 'lucide-react';
+import LocationSearch from '../components/LocationSearch';
+import { Search as SearchIcon, Filter, Sparkles, MapPin } from 'lucide-react';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -11,6 +12,8 @@ const Search = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [userLocation, setUserLocation] = useState(null);
+    const [showLocationSearch, setShowLocationSearch] = useState(false);
 
     const categories = ['All', 'Cleaning', 'Plumbing', 'Electrical', 'Moving', 'Tutoring'];
 
@@ -25,30 +28,70 @@ const Search = () => {
 
     useEffect(() => {
         fetchServices();
-    }, [selectedCategory]);
+    }, [selectedCategory, userLocation]);
 
     const fetchServices = async () => {
         setLoading(true);
         try {
-            let query = supabase
-                .from('services')
-                .select(`
-          *,
-          profiles (full_name, avatar_url, location)
-        `);
+            if (userLocation) {
+                // Use location-based search
+                const { data, error } = await supabase.rpc('get_services_within_radius', {
+                    user_lat: userLocation.lat,
+                    user_lon: userLocation.lon,
+                    radius_km: userLocation.radius,
+                    category_filter: selectedCategory === 'All' ? null : selectedCategory
+                });
 
-            if (selectedCategory !== 'All') {
-                query = query.eq('category', selectedCategory);
+                if (error) throw error;
+
+                // Fetch provider details for each service
+                const servicesWithProfiles = await Promise.all(
+                    (data || []).map(async (service) => {
+                        const { data: serviceData, error: serviceError } = await supabase
+                            .from('services')
+                            .select(`
+                                *,
+                                profiles (full_name, avatar_url, location)
+                            `)
+                            .eq('id', service.service_id)
+                            .single();
+
+                        if (serviceError) throw serviceError;
+                        return {
+                            ...serviceData,
+                            distance_km: service.distance_km,
+                            average_rating: service.average_rating
+                        };
+                    })
+                );
+
+                setServices(servicesWithProfiles);
+            } else {
+                // Regular search without location
+                let query = supabase
+                    .from('services')
+                    .select(`
+                        *,
+                        profiles (full_name, avatar_url, location)
+                    `);
+
+                if (selectedCategory !== 'All') {
+                    query = query.eq('category', selectedCategory);
+                }
+
+                const { data, error } = await query;
+                if (error) throw error;
+                setServices(data || []);
             }
-
-            const { data, error } = await query;
-            if (error) throw error;
-            setServices(data || []);
         } catch (error) {
             console.error('Error fetching services:', error);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleLocationChange = (location) => {
+        setUserLocation(location);
     };
 
     const filteredServices = services.filter(service =>
@@ -89,6 +132,42 @@ const Search = () => {
                     </p>
                 </div>
             </motion.div>
+
+            {/* Location Search Toggle */}
+            <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowLocationSearch(!showLocationSearch)}
+                style={{
+                    width: '100%',
+                    padding: '1rem',
+                    marginBottom: '1rem',
+                    background: showLocationSearch 
+                        ? 'linear-gradient(135deg, #D63864 0%, #FF6B35 100%)'
+                        : 'linear-gradient(135deg, rgba(214, 56, 100, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    color: showLocationSearch ? 'white' : '#D63864',
+                    fontWeight: '600',
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
+                }}
+            >
+                <MapPin size={20} />
+                {showLocationSearch ? 'Hide Location Search' : 'Search by Location'}
+            </motion.button>
+
+            {/* Location Search Component */}
+            {showLocationSearch && (
+                <LocationSearch 
+                    onLocationChange={handleLocationChange}
+                    currentRadius={userLocation?.radius || 10}
+                />
+            )}
 
             <div style={{ marginBottom: '2rem' }}>
                 {/* Glassmorphism Search Bar */}

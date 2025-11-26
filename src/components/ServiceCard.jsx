@@ -180,7 +180,21 @@ const ServiceCard = ({ service, featured = false }) => {
                 ₹{service.price}
               </div>
             </div>
-            {service.location && (
+            {service.distance_km !== undefined ? (
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '4px',
+                padding: '4px 8px',
+                background: 'linear-gradient(135deg, rgba(214, 56, 100, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%)',
+                borderRadius: '8px',
+                color: '#D63864',
+                fontWeight: '600'
+              }}>
+                <MapPin size={14} />
+                <span className="label-small">{service.distance_km.toFixed(1)} km away</span>
+              </div>
+            ) : service.location && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--md-sys-color-on-surface-variant)' }}>
                 <MapPin size={14} />
                 <span className="label-small">{service.location}</span>
