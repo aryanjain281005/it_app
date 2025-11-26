@@ -20,8 +20,9 @@ ADD COLUMN IF NOT EXISTS response TEXT,
 ADD COLUMN IF NOT EXISTS responded_at TIMESTAMPTZ;
 
 -- Create index for faster review queries
-CREATE INDEX IF NOT EXISTS idx_reviews_service_rating ON reviews(service_id, rating);
-CREATE INDEX IF NOT EXISTS idx_reviews_user ON reviews(user_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_booking_rating ON reviews(booking_id, rating);
+CREATE INDEX IF NOT EXISTS idx_reviews_reviewer ON reviews(reviewer_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_provider ON reviews(provider_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_verified ON reviews(verified) WHERE verified = true;
 
 -- Function to automatically verify reviews from completed bookings
@@ -33,7 +34,7 @@ BEGIN
     SELECT 1 FROM bookings 
     WHERE id = NEW.booking_id 
     AND status = 'completed' 
-    AND user_id = NEW.user_id
+    AND user_id = NEW.reviewer_id
   ) THEN
     NEW.verified := TRUE;
   END IF;
@@ -217,9 +218,9 @@ SELECT
   COUNT(DISTINCT CASE WHEN r.verified = true THEN r.id END) AS verified_reviews,
   COALESCE(SUM(b.total_price), 0) AS total_earnings
 FROM profiles p
-LEFT JOIN services s ON s.user_id = p.id
+LEFT JOIN services s ON s.provider_id = p.id
 LEFT JOIN bookings b ON b.service_id = s.id
-LEFT JOIN reviews r ON r.service_id = s.id
+LEFT JOIN reviews r ON r.booking_id = b.id
 WHERE p.role = 'provider'
 GROUP BY p.id, p.full_name;
 
@@ -240,7 +241,7 @@ CREATE POLICY "Providers can manage their service packages"
     EXISTS (
       SELECT 1 FROM services 
       WHERE services.id = service_packages.service_id 
-      AND services.user_id = auth.uid()
+      AND services.provider_id = auth.uid()
     )
   );
 
@@ -275,7 +276,7 @@ CREATE POLICY "Service owners can manage cancellation policies"
     EXISTS (
       SELECT 1 FROM services 
       WHERE services.id = cancellation_policies.service_id 
-      AND services.user_id = auth.uid()
+      AND services.provider_id = auth.uid()
     )
   );
 
@@ -306,7 +307,8 @@ BEGIN
     COALESCE(AVG(r.rating), 0) AS average_rating,
     s.price
   FROM services s
-  LEFT JOIN reviews r ON r.service_id = s.id
+  LEFT JOIN bookings b ON b.service_id = s.id
+  LEFT JOIN reviews r ON r.booking_id = b.id
   WHERE s.latitude IS NOT NULL 
     AND s.longitude IS NOT NULL
     AND calculate_distance(user_lat, user_lon, s.latitude, s.longitude) <= radius_km
@@ -354,8 +356,8 @@ BEGIN
   IF is_available THEN
     SELECT NOT EXISTS (
       SELECT 1 FROM bookings
-      WHERE service_id IN (SELECT id FROM services WHERE user_id = p_provider_id)
-      AND date = p_date
+      WHERE service_id IN (SELECT id FROM services WHERE provider_id = p_provider_id)
+      AND booking_date = p_date
       AND status NOT IN ('cancelled', 'refunded')
       AND (
         (start_time, end_time) OVERLAPS (p_start_time, p_end_time)
@@ -380,13 +382,13 @@ DECLARE
   refund_percentage INTEGER := 0;
 BEGIN
   -- Get booking details
-  SELECT b.date, b.total_price, b.service_id
+  SELECT b.booking_date, b.total_price, b.service_id
   INTO booking_date, booking_price, service_id
   FROM bookings b
   WHERE b.id = p_booking_id;
   
   -- Calculate hours until booking
-  hours_until_booking := EXTRACT(EPOCH FROM (booking_date - CURRENT_DATE)) / 3600;
+  hours_until_booking := EXTRACT(EPOCH FROM (booking_date::timestamp - CURRENT_TIMESTAMP)) / 3600;
   
   -- Get applicable refund percentage
   SELECT cp.refund_percentage
