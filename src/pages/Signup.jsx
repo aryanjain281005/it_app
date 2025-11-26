@@ -115,7 +115,7 @@ const Signup = () => {
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
                         }}>Create Account</h2>
-                        <p style={{ color: '#666', fontSize: '0.95rem' }}>Join LocalSkillHub today</p>
+                        <p style={{ color: '#666', fontSize: '0.95rem' }}>Join SkillScout today</p>
                     </div>
 
                 {error && (

@@ -279,4 +279,4 @@ GRANT ALL ON ALL ROUTINES IN SCHEMA public TO postgres, anon, authenticated, ser
 -- ============================================
 -- SUCCESS MESSAGE
 -- ============================================
-SELECT 'Database setup complete! All tables, policies, and triggers created successfully.' AS status;
+SELECT 'Database setup complete! All tables, policies, and triggers created successfu

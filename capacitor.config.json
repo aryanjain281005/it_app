@@ -1,5 +1,5 @@
 {
-  "appId": "com.localskillhub.app",
-  "appName": "LocalSkillHub",
+  "appId": "com.skillscout.app",
+  "appName": "SkillScout",
   "webDir": "dist"
 }

@@ -34,7 +34,11 @@ const CreateService = () => {
         category: 'Home Repair',
         price: '',
         description: '',
-        image_url: ''
+        image_url: '',
+        pricing_type: 'fixed',
+        hourly_rate: '',
+        min_hours: '',
+        rush_charge_percentage: '0'
     });
     const [selectedImage, setSelectedImage] = useState(null);
 
@@ -68,16 +72,24 @@ const CreateService = () => {
             // Use uploaded image or default category image
             const imageUrl = formData.image_url || DEFAULT_IMAGES[formData.category];
 
-            const { error } = await supabase.from('services').insert([
-                {
-                    provider_id: user.id,
-                    title: formData.title,
-                    category: formData.category,
-                    price: parseFloat(formData.price),
-                    description: formData.description,
-                    image_url: imageUrl
-                }
-            ]);
+            const serviceData = {
+                provider_id: user.id,
+                title: formData.title,
+                category: formData.category,
+                price: parseFloat(formData.price),
+                description: formData.description,
+                image_url: imageUrl,
+                pricing_type: formData.pricing_type,
+                rush_charge_percentage: parseInt(formData.rush_charge_percentage) || 0
+            };
+
+            // Add hourly pricing fields if applicable
+            if (formData.pricing_type === 'hourly') {
+                serviceData.hourly_rate = parseFloat(formData.hourly_rate);
+                serviceData.min_hours = parseInt(formData.min_hours) || 1;
+            }
+
+            const { error } = await supabase.from('services').insert([serviceData]);
 
             if (error) throw error;
             toast.success('Service created successfully!');
@@ -122,16 +134,84 @@ const CreateService = () => {
                         </select>
                     </div>
 
+                    {/* Pricing Type */}
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Price (₹)</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Pricing Type</label>
+                        <select
+                            value={formData.pricing_type}
+                            onChange={(e) => setFormData({ ...formData, pricing_type: e.target.value })}
+                            style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                        >
+                            <option value="fixed">Fixed Price</option>
+                            <option value="hourly">Hourly Rate</option>
+                            <option value="per_project">Per Project</option>
+                        </select>
+                    </div>
+
+                    {/* Conditional Pricing Fields */}
+                    {formData.pricing_type === 'hourly' ? (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Hourly Rate (₹)</label>
+                                <input
+                                    type="number"
+                                    required
+                                    placeholder="500"
+                                    value={formData.hourly_rate}
+                                    onChange={(e) => setFormData({ ...formData, hourly_rate: e.target.value })}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                                />
+                            </div>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Min Hours</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    placeholder="2"
+                                    value={formData.min_hours}
+                                    onChange={(e) => setFormData({ ...formData, min_hours: e.target.value })}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                                />
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>
+                                {formData.pricing_type === 'per_project' ? 'Starting Price (₹)' : 'Price (₹)'}
+                            </label>
+                            <input
+                                type="number"
+                                required
+                                placeholder="500"
+                                value={formData.price}
+                                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                            />
+                        </div>
+                    )}
+
+                    {/* Rush Charges */}
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>
+                            Rush Charge (%)
+                            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 400, marginLeft: '0.5rem' }}>
+                                Optional - for urgent requests
+                            </span>
+                        </label>
                         <input
                             type="number"
-                            required
-                            placeholder="500"
-                            value={formData.price}
-                            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                            min="0"
+                            max="100"
+                            placeholder="0"
+                            value={formData.rush_charge_percentage}
+                            onChange={(e) => setFormData({ ...formData, rush_charge_percentage: e.target.value })}
                             style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
                         />
+                        {parseInt(formData.rush_charge_percentage) > 0 && (
+                            <p style={{ fontSize: '0.875rem', color: 'var(--md-sys-color-primary)', marginTop: '0.5rem' }}>
+                                Urgent requests will cost {parseInt(formData.rush_charge_percentage)}% more
+                            </p>
+                        )}
                     </div>
 
                     <div>

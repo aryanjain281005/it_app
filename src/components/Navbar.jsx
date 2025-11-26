@@ -64,7 +64,7 @@ const Navbar = () => {
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
-                        }}>LocalSkillHub</span>
+                        }}>SkillScout</span>
                     </Link>
                 </div>
 
